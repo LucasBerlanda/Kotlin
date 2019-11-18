@@ -1,19 +1,25 @@
 package br.edu.unoesc
 
-import java.io.File
-import java.io.InputStream
+import java.util.*
 
 fun main(args:Array<String>) {
 
-    val p2 = DividaParcela()
-    println("Parcelas: " + p2.getValorParcela(total = 100.0, qtParcelas = 3, qtDiasEntreParcelas = 30))
+    val p2 = Divida()
 
-//    val inputStream: InputStream = File("C:\\Users\\Berlanda\\Desktop\\cancelamentos.csv").inputStream()
-//
-//    val inputString = inputStream.bufferedReader().use { it.readText() }
-//    println(inputString)
-//
-//    val sheet = inputString.get(0)
+    val reader = Scanner(System.`in`)
+
+    println("Digite o valor da divida: ")
+    val valor :Double = reader.nextDouble()
+
+    println("Dividido em quantas vezes? ")
+    val qtParcelas :Int = reader.nextInt()
+
+    println("Intervalo de dias para cada parcela: ")
+    val diasEntreParcelas :Int = reader.nextInt()
+
+    reader.close()
+    println("Parcelas: " + p2.getParcelas(total = valor, qtParcelas = qtParcelas, qtDiasEntreParcelas = diasEntreParcelas))
+
 
 
 
