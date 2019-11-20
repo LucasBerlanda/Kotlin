@@ -1,53 +1,54 @@
 package br.edu.unoesc
 
 import br.edu.unoesc.model.Cancelamento
-import br.edu.unoesc.model.CancelamentoCliente
 import java.io.File
 import java.io.InputStream
-
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 fun main(args:Array<String>) {
     // exercicio cancelamento
-
+    // ler o arquivo
     val arquivo: InputStream = File("C:\\Users\\Berlanda\\Desktop\\cancelamentos.csv").inputStream();
-    val str = arquivo.bufferedReader().use { it.readText() }
+    val cancelamentos = ArrayList<Cancelamento>()
 
-    var lista = ArrayList<Cancelamento>()
-
-    for(i in 1..str.length) {
-        lista.add(
-            Cancelamento(
-                cliente_id = str[0].toLong(),
-                usuario_responsavel_id = str[1].toLong(),
-                data_cadastro = str[2].toString(),
-                classificacao_cliente = str[3].toString(),
-                quantidade_usuario_pagante = str[4].toInt(),
-                data_inicio = str[5].toString(),
-                data_cancelamento = str[6].toString(),
-                motivo_cancelamento_id = str[7].toInt(),
-                motivo = str[8].toString()
-            )
-        )
-    }
-
-    var cancelamentoPorCliente = ArrayList<CancelamentoCliente>()
-
-    lista.forEach {
-        val cla = it.classificacao_cliente
-        var count = 0
-        lista.forEach{
-            if (it.classificacao_cliente == cla){
-                count += 1
-            }
+    arquivo.bufferedReader().useLines() { l -> l.forEach {
+        cancelamentos.add(Cancelamento(
+                cliente_id = it.split( ';')[0].toLong(),
+                usuario_responsavel_id = it.split(';')[1].toLong(),
+                data_cadastro = it.split(';')[2],
+                classificacao_cliente = it.split(';')[3],
+                quantidade_usuario_pagante = it.split(';')[4].toInt(),
+                data_inicio = it.split(';')[5],
+                data_cancelamento = it.split(';')[6],
+                motivo_cancelamento_id = it.split(';')[7].toInt(),
+                motivo = it.split(';')[8]
+            ))
         }
-        cancelamentoPorCliente.add(CancelamentoCliente(total = count, classificacao = cla))
+
     }
 
-    var nova = cancelamentoPorCliente.distinctBy { it.classificacao }.sortedByDescending { it.total }
-    nova.forEach {
-        print(it.total)
-        print(" - ")
-        println(it.classificacao)
-    }
+    println("Número de cancelamentos por classificação do cliente, ordenado pelo maior número DESC")
+    Cancelamento.getCancelamentos(cancelamentos)
+
+    println("-----------------------------------")
+    println("Número de cancelamentos por motivo de cancelamento, ordenado pelo maior número DESC")
+    Cancelamento.getCancelamentoByMotivo(cancelamentos)
+
+    println("------------------------------------")
+    println("Quantidade de usuários cancelados por mês/ano, ordenado pelo mes/ano ASC")
+//    Cancelamento.getCanceladosMesAno(cancelamentos)
+
+    println("------------------------------------")
+    println("Quantidade de clientes cancelados por usuário responsável, ordenado por número DESC")
+    Cancelamento.getCancelamentoByUserResponsavel(cancelamentos)
+
 
 }
+
+
+
+
+

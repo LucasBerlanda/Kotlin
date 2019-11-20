@@ -8,7 +8,7 @@ fun main(args:Array<String>) {
 
     val reader = Scanner(System.`in`)
 
-    println("Digite o valor da divida: ")
+    println("Digite o valor da dívida: ")
     val valor :Double = reader.nextDouble()
 
     println("Dividido em quantas vezes? ")
