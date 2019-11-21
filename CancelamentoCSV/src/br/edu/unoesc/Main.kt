@@ -11,20 +11,20 @@ import kotlin.collections.ArrayList
 fun main(args:Array<String>) {
     // exercicio cancelamento
     // ler o arquivo
-    val arquivo: InputStream = File("C:\\Users\\Berlanda\\Desktop\\cancelamentos.csv").inputStream();
+    val arquivo: InputStream = File("C:\\Users\\Berlanda\\Desktop\\cancelamentos2.csv").inputStream();
     val cancelamentos = ArrayList<Cancelamento>()
 
     arquivo.bufferedReader().useLines() { l -> l.forEach {
         cancelamentos.add(Cancelamento(
-                cliente_id = it.split( ';')[0].toLong(),
-                usuario_responsavel_id = it.split(';')[1].toLong(),
-                data_cadastro = it.split(';')[2],
-                classificacao_cliente = it.split(';')[3],
-                quantidade_usuario_pagante = it.split(';')[4].toInt(),
-                data_inicio = it.split(';')[5],
-                data_cancelamento = it.split(';')[6],
-                motivo_cancelamento_id = it.split(';')[7].toInt(),
-                motivo = it.split(';')[8]
+                cliente_id = it.split( ',')[0].replace("\"", "").toLong(),
+                usuario_responsavel_id = it.split(',')[1].replace("\"", "").toLong(),
+                data_cadastro = it.split(',')[2].replace("\"", ""),
+                classificacao_cliente = it.split(',')[3].replace("\"", ""),
+                quantidade_usuario_pagante = it.split(',')[4].replace("\"", "").toInt(),
+                data_inicio = it.split(',')[5].replace("\"", ""),
+                data_cancelamento = LocalDate.parse(it.split(',')[6].replace("\"", "")),
+                motivo_cancelamento_id = it.split(',')[7].replace("\"", "").toInt(),
+                motivo = it.split(',')[8].replace("\"", "")
             ))
         }
 
@@ -39,7 +39,7 @@ fun main(args:Array<String>) {
 
     println("------------------------------------")
     println("Quantidade de usuários cancelados por mês/ano, ordenado pelo mes/ano ASC")
-//    Cancelamento.getCanceladosMesAno(cancelamentos)
+    Cancelamento.getCanceladosMesAno(cancelamentos)
 
     println("------------------------------------")
     println("Quantidade de clientes cancelados por usuário responsável, ordenado por número DESC")

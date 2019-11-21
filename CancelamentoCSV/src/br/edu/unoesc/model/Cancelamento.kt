@@ -16,7 +16,7 @@ class Cancelamento(
     val classificacao_cliente: String,
     val quantidade_usuario_pagante: Int,
     val data_inicio: String,
-    val data_cancelamento: String,
+    val data_cancelamento: LocalDate,
     val motivo_cancelamento_id: Int,
     val motivo: String) {
 
@@ -40,24 +40,20 @@ class Cancelamento(
 
         }
 
-//        fun getCanceladosMesAno(cancelamentos: List<Cancelamento>) {
-//
-//            cancelamentos.forEach {
-//
-//                var date = LocalDate.parse(it.data_cancelamento, DateTimeFormatter.ISO_DATE)
-//                val ano = date.year
-//                val mes = date.month
-//                var count = 0
-//                cancelamentos.forEach{
-//                    var data = LocalDate.parse(it.data_cancelamento, DateTimeFormatter.ISO_DATE)
-//                    if(ano == data.year && mes == data.month){
-//                        count ++
-//                    }
-//                }
-//                println("${mes}/${ano} = ${count}")
-//            }
-//
-//        }
+        fun getCanceladosMesAno(cancelamentos: List<Cancelamento>) {
+
+            val cancel = cancelamentos.groupBy { it.data_cancelamento.withDayOfMonth(1) }
+
+            cancel.toList().sortedBy { (key, value) -> key  }.toMap().forEach {
+
+                val ano = it.key.year
+                val mes = it.key.month
+                var count = it.value.count()
+
+                println("$mes/$ano = $count")
+            }
+
+        }
         fun getCancelamentoByUserResponsavel(cancelamentos: List<Cancelamento>) {
 
             val cancel = cancelamentos.groupBy { it.usuario_responsavel_id }
