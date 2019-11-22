@@ -1,21 +1,15 @@
 package br.edu.unoesc.model
-
-import java.text.DateFormat
 import java.time.LocalDate
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.util.logging.SimpleFormatter
-import java.text.SimpleDateFormat
-import javax.swing.text.DateFormatter
-
+import java.time.temporal.ChronoUnit
+import kotlin.math.roundToLong
 
 class Cancelamento(
     val cliente_id: Long,
     val usuario_responsavel_id: Long,
-    val data_cadastro: String,
+    val data_cadastro: LocalDate,
     val classificacao_cliente: String,
     val quantidade_usuario_pagante: Int,
-    val data_inicio: String,
+    val data_inicio: LocalDate,
     val data_cancelamento: LocalDate,
     val motivo_cancelamento_id: Int,
     val motivo: String) {
@@ -29,6 +23,15 @@ class Cancelamento(
             totalCancel.toList().sortedByDescending { (key, value) -> value.size }.toMap().forEach {
                 println("${it.value.get(0).classificacao_cliente }  -  ${it.value.size}")
             }
+        }
+
+        fun getMediaTempoVida(cancelamentos: List<Cancelamento>){
+            val qtDias = ArrayList<Long>()
+
+            cancelamentos.forEach {
+                qtDias.add(ChronoUnit.DAYS.between(it.data_inicio, it.data_cancelamento))
+            }
+            println("Média de tempo de vida do usuário no sistema em dias= ${qtDias.average().roundToLong()}")
         }
 
         fun getCancelamentoByMotivo(cancelamentos: List<Cancelamento>) {
@@ -54,6 +57,7 @@ class Cancelamento(
             }
 
         }
+
         fun getCancelamentoByUserResponsavel(cancelamentos: List<Cancelamento>) {
 
             val cancel = cancelamentos.groupBy { it.usuario_responsavel_id }
